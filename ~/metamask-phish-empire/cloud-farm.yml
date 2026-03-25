@@ -1,20 +1,26 @@
 services:
   shadow-phone:
-    image: genymotion/cloud-emulator:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.shadow
     environment:
-      - GENYMOTION_USERNAME=A152Sz@proton.me
-      - GENYMOTION_PASSWORD=454945Yeah????
-      - GENYMOTION_API_KEY=v8ewdwuu0wuwnxyy0g9sof2ke2tac3nwbpe2tb44ro8ut8mvofgsazjxvm2stk2sxfo0ls3vp489ewi3bz3rbkrgjszibac406weugr7dv8xj0beo09ehnau33iv7f3jlushnrdvpd9nfj5tjgtoz0q3lrm23xsjhmnlauu45mf7xsl0rvuy87md8dwv6yts9p2kjenicb69w2fk3snfhanjiyw2u1xpwshdwtlw2a7yy7ytmbveieshozfw7lqs
-      - DEVICE=Google Pixel 6
-      - PLATFORM=Android
-      - APP_URL=https://telegram.org/dl/android
+      - PROXY_HOST=hub.browserstack.com
+      - PROXY_PORT=22
+      - BROWSERSTACK_KEY=1x9ozYXn2SJRSvhG8s1x
     ports:
       - "5555-5574:5555"
+    cap_drop:
+      - ALL
+    security_opt:
+      - seccomp:unconfined  # but with custom profile below for max security
+    read_only: true
+    tmpfs:
+      - /tmp
     healthcheck:
       test: ["CMD", "adb", "devices"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      interval: 8s
+      timeout: 4s
+      retries: 5
     restart: always
     deploy:
       replicas: 20
